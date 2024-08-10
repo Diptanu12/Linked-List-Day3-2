@@ -1,0 +1,131 @@
+Partitioning a Linked List
+The task is to reorganize the elements in a linked list such that all elements with a value less than a certain number x come before all elements with a value greater than or equal to x. The relative order of the elements within each partition should be preserved.
+
+Input Format
+First line contains n, number of nodes in the linked list.
+
+Second line contains the nodes of the linked list.
+
+Output Format
+Print the reorganized linked list.
+
+Example 1
+Input
+
+6
+1 6 2 5 3 4
+3
+Output
+
+1 2 6 5 3 4
+Example 2
+Input
+
+5
+1 5 2 4 3
+4 
+Output
+
+1 2 3 5 4
+Constraints
+1 <= n <= 1000
+
+Topics
+Linked lists
+Companies
+
+
+
+import java.io.*;
+import java.util.*;
+
+class Node {
+    int data;
+    Node next;
+    Node(int data) {
+        this.data = data;
+        next = null;
+    }
+}
+
+class LinkedList {
+    Node head;
+    void add(int data) {
+        Node new_node = new Node(data);
+        if (head == null) {
+            head = new_node;
+            return;
+        }
+        Node current = head;
+        while (current.next != null) {
+            current = current.next;
+        }
+        current.next = new_node;
+    }
+    
+    void printList() {
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
+        }
+        System.out.println();
+    }
+}
+
+class Solution {
+    public void partition(Node head, int x) {
+        if (head == null) {
+            return;
+        }
+        
+        Node lessHead = new Node(0); // Dummy node for the list of nodes less than x
+        Node less = lessHead;
+        Node greaterHead = new Node(0); // Dummy node for the list of nodes greater or equal to x
+        Node greater = greaterHead;
+        
+        Node current = head;
+        
+        while (current != null) {
+            if (current.data < x) {
+                less.next = current;
+                less = less.next;
+            } else {
+                greater.next = current;
+                greater = greater.next;
+            }
+            current = current.next;
+        }
+        
+        greater.next = null; // End the list of greater nodes
+        less.next = greaterHead.next; // Append the greater list to the end of the less list
+        
+        head = lessHead.next; // Update the head to the beginning of the less list
+        
+        // Print the partitioned list for verification
+        printList(head);
+    }
+    
+    private void printList(Node head) {
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
+        }
+        System.out.println();
+    }
+}
+
+public class Main {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        LinkedList l1 = new LinkedList();
+        for (int i = 0; i < n; i++) {
+            l1.add(sc.nextInt());
+        }
+        int x = sc.nextInt();
+        Solution Ob = new Solution();
+        Ob.partition(l1.head, x);
+    }
+}
